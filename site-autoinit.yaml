@@ -1,0 +1,10 @@
+- hosts: jinshan_all
+#  pre_tasks:
+#    - name: check the file /root/.init_done
+#      shell: test -e /root/.init_dote 
+#      register: result
+#      ignore_errors: Ture
+       
+  roles:
+    - { role: common, with_first_found: /root/.init_done , when: ansible_distribution=="CentOS" and ansible_distribution_version|int>=6 }
+

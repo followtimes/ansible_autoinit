@@ -1,0 +1,20 @@
+#!/usr/bin/expect  -f
+
+
+set host   [ lindex $argv 0]
+set passwd [ lindex $argv 1]
+
+
+spawn scp /root/.ssh/id_rsa.pub $host:/root/.ssh/
+
+
+expect {
+
+-re "(yes/no?)" { send "yes\r";exp_continue }
+
+-re "password:" { send "$passwd\r" }
+
+}
+
+expect EOF
+

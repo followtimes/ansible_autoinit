@@ -1,0 +1,21 @@
+#!/usr/bin/expect
+
+
+set host         [ lindex $argv 0]
+set new_passwd   [ lindex $argv 1]
+
+spawn ssh $host
+
+
+
+expect "~]#"                  
+send "passwd\r"
+expect {
+
+-re "New password:"        { send "$new_passwd\r";exp_continue }
+-re "Retype new password:" { send "$new_passwd\r";exp_continue }
+-re "~]#"                  {send "exit\r"}
+
+}
+
+expect EOF

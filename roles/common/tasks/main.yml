@@ -1,0 +1,99 @@
+---
+    - name: copy /etc/ansible/automount_data_block_for_xiaomi.sh to /etc/rc.d/
+      copy: src=/tmp/automount_data_block_for_xiaomi.sh dest=/etc/rc.d/ owner=root group=root mode=0700
+
+    - name: change /etc/rc.d/rc.local
+      lineinfile: dest=/etc/rc.d/rc.local state=present regexp="^$" line="mount_sh=/etc/rc.d/automount_data_block_for_xiaomi.sh"
+
+    - name: change /etc/rc.d/rc.local
+      lineinfile: dest=/etc/rc.d/rc.local state=present regexp="^$" line="if [ -e $mount_sh ];then bash $mount_sh; fi"
+    
+    - name: useradd work
+      user: name=work uid=10000 home="/home/work"  
+
+    - name: copy centos-65.sh
+      copy: src=/tmp/centos-65.sh dest=/tmp/centos-65.sh owner=root group=root mode=0700
+
+    - name: sh centos-65.sh
+      shell: sh  /tmp/centos-65.sh
+
+    - name: yum install gilbc* 
+      shell: yum install -y  glibc*
+
+    - name: yum install ethtool
+      yum: name=ethtool state=present
+
+    - name: yum install sudo
+      yum: name=sudo state=present
+
+    - name: remove /etc/sysctl.conf  lines which include bridge
+      lineinfile: dest=/etc/sysctl.conf regexp=bridge state=absent
+    - name: remove /etc/sysctl.conf  lines which include eth1
+      lineinfile: dest=/etc/sysctl.conf regexp=eth1 state=absent
+
+    - name: change sysctl.conf to improve speed for user visiting
+      sysctl: name="net.ipv4.tcp_timestamps"              value=0      state=present reload=yes
+    - name: change sysctl.conf to improve speed for user visiting
+      sysctl: name="net.ipv4.tcp_tw_recycle"              value=0      state=present reload=yes
+    - name: change sysctl.conf to improve speed for user visiting
+      sysctl: name="net.ipv4.tcp_tw_reuse"                value=0      state=present reload=yes
+    - name: change sysctl.conf to improve speed for user visiting
+      sysctl: name="net.ipv4.tcp_congestion_control"      value="west" state=present reload=yes
+    - name: change sysctl.conf to improve speed for user visiting
+      sysctl: name="net.ipv4.tcp_slow_start_after_idle"   value=0      state=present reload=yes
+
+    - name: download kernel kernel-ml-aufs-3.10.5-12.1.x86_64.rpm
+      copy: src=/tmp/kernel-ml-aufs-3.10.5-12.1.x86_64.rpm  dest=/tmp owner=root group=root
+    - name: up kernel
+      shell: rpm -ivh /tmp/kernel-ml-aufs-3.10.5-12.1.x86_64.rpm
+    - name: change /boot/grub/grub.conf
+      lineinfile: dest=/boot/grub/grub.conf regexp="^default" line="default=0"
+    - name: remove the /tmp/kernel-ml-aufs-3.10.5-12.1.x86_64.rpm
+      file: dest=/tmp/kernel-ml-aufs-3.10.5-12.1.x86_64.rpm state=absent
+
+    - name: make work group can do sudo no passwd
+      lineinfile: dest=/etc/sudoers  regexp="^$" state=present   line="%work   ALL=(ALL)       NOPASSWD{{':'}} ALL"
+    - name: access the multain network interface card mode
+      lineinfile: dest=/etc/rc.d/rc.local state=present regexp="^$"  line="ethtool -L eth0 combined 8"
+
+     
+#    - name: copy Ksyun.repo 
+#      copy: src=/tmp/Ksyun.repo dest=/etc/yum.repos.d/Ksyun.repo owner=root group=root 
+#    - name: install httpd    save for cloudmonitor 
+#      yum: name=httpd  state=present 
+#    - name: start httpd       save for cloudmonitor
+#      shell: /usr/local/zabbix/etc/cloudmonitor start
+#      service: name=httpd  state=started
+#    - name: auto start cloudmonitor
+#      lineinfile: dest=/etc/bashrc state=present regxep="^$" line="/usr/local/zabbix/etc/cloudmonitor start"
+#      lineinfile: dest=/etc/bashrc state=present regexp="^$"  line="/etc/init.d/httpd start"      
+   
+    - name: reboot
+      command: shutdown -r now "Reboot remote machine by Ansible"
+       
+    - name: wait for reboot
+      local_action:
+         module: wait_for
+           port=22
+           timeout=300
+
+    - name: pause sometime for kernel update
+      pause: minute=3
+
+#    - name: test reboot and wait
+#      shell: echo "reboot and wait success !" > /root/Desktop/reboot_wait_test
+#
+#    - name: mount test
+#      mount: name=/home src=/dev/mapper/vg1-lv_data fstype=ext3 state=mounted
+
+    - name: user work
+      user: name=work state=present uid=10000 home="/home/work" 
+
+    - name: test kernel version
+      shell: echo "{{ansible_kernel}}" > /root/kernel_version
+
+    - name: check
+      shell: echo "" > /root/.init_done
+      when: ansible_kernel== "3.10.5-12.1.x86_64"
+      notify: save for something
+   
