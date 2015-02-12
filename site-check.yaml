@@ -1,0 +1,5 @@
+- hosts: jinshan_all
+
+  roles:
+   - { role: check}
+

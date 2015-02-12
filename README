@@ -5,11 +5,17 @@ author: zhuhenghui   date: 2015/2/12
  Initialize the trust relationship of the machine,
  need to be established in the current directory host_pass files, 
  content for host pass two columns, 
- and then run directly test_sshd_exp.sh file, without any arameters!
+ and then run directly run_all.sh file, without any arameters!
 
 ----------------------------------------------------------------------
 
-使用方法：运行run_file目录下的run_all.sh脚本，不加任何参数。
+环境：
+ansible    : 版本1.5以上
+expect tcl : yum install expect tcl -y
+
+----------------------------------------------------------------------
+
+使用方法：进入run_file目录（必须进入该目录），在当前目录运行run_all.sh脚本，不加任何参数。
 使用前需要完成：
 1  将远程主机的ip 和 初始密码 放入hostpass文件
 2  将远程主机hostname放入auto_init_git_xiaomi/ansible_autoinit/hosts
@@ -33,8 +39,10 @@ author: zhuhenghui   date: 2015/2/12
 auto_init_git_xiaomi
    |- README
    |-ansible_autoinit
-       |--hosts
-       |--site-autoinit.yaml
+       |-hosts
+       |-site-autoinit.yaml
+       |-site-check.yaml
+       |-run_file
             |-automount_data_block_for_xiaomi.sh
             |-centos-65.sh
             |-host_pass
@@ -44,9 +52,15 @@ auto_init_git_xiaomi
                |-expect_change_passwd.exp
                |-expect_change_sshd_config.exp
                |-expect_ssh.exp
-       |--run_file
-       |--roles 
+       |-roles 
             |-common
+                |-files
+                |-handlers
+                   |-main.yml
+                |-tasks
+                   |-main.yml
+                |-templates
+            |-check
                 |-files
                 |-handlers
                    |-main.yml
