@@ -1,0 +1,58 @@
+
+author: zhuhenghui   date: 2015/2/12
+----------------------------------------------------------------------
+
+ Initialize the trust relationship of the machine,
+ need to be established in the current directory host_pass files, 
+ content for host pass two columns, 
+ and then run directly test_sshd_exp.sh file, without any arameters!
+
+----------------------------------------------------------------------
+
+使用方法：运行run_file目录下的run_all.sh脚本，不加任何参数。
+使用前需要完成：
+1  将远程主机的ip 和 初始密码 放入hostpass文件
+2  将远程主机hostname放入auto_init_git_xiaomi/ansible_autoinit/hosts
+3  配置ssh-keygen      
+4  配置ansible的conf文件，开启scp_if_ssh=True
+
+----------------------------------------------------------------------
+
+各文件说明：
+    run_all.sh                           :  shell脚本， 功能：实现各个步骤文件的执行和串接
+    expect_ssh.exp                       :  expect脚本，功能：将公钥传给目标主机
+    expect_change_sshd_config.exp        :  expect脚本，功能：修改sshd服务的配置文件，使得sshd服务支持公钥验证连接，实现work组用户免密码运行sudo
+    expect_change_passwd.exp             :  expect脚本，功能：修改远程主机root密码为随机16位字母
+    host_pass                            :  普通文件，  功能：存储远程主机名与初始密码，格式为：host passwd ，每一行为一个远程主机
+    centos-65.sh                         :  shell脚本， 功能：初始化脚本
+    utomount_data_block_for_xiaomi.sh    :  shell脚本， 功能：初始化挂载脚本
+
+
+------------------------------dir-map---------------------------------
+
+auto_init_git_xiaomi
+   |- README
+   |-ansible_autoinit
+       |--hosts
+       |--site-autoinit.yaml
+            |-automount_data_block_for_xiaomi.sh
+            |-centos-65.sh
+            |-host_pass
+            |-kernel-ml-aufs-3.10.5-12.1.x86_64.rpm
+            |-run_all.sh
+            |-expect
+               |-expect_change_passwd.exp
+               |-expect_change_sshd_config.exp
+               |-expect_ssh.exp
+       |--run_file
+       |--roles 
+            |-common
+                |-files
+                |-handlers
+                   |-main.yml
+                |-tasks
+                   |-main.yml
+                |-templates
+                
+----------------------------------------------------------------------
+
