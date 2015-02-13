@@ -20,6 +20,9 @@ change_passwd_file=$pwd_dir/expect/expect_change_passwd.exp
 #playbook for test
 play_book=$pwd_dir/../site-autoinit.yaml
 
+#playbook for test
+check_book=$pwd_dir/../site-check.yaml
+
 #hosts file
 hosts_file=$pwd_dir/../hosts
 
@@ -63,7 +66,9 @@ expect $change_passwd_file  $host $new_passwd
 done
 
 #ansible_playbooks 
-ansible-playbook  -i $hosts_file  $play_book  -vvv 
+ansible-playbook  -i $hosts_file  $play_book   -vvv 
+#ansible_playbooks 
+ansible-playbook  -i $hosts_file  $check_book  -vvv 
 
 #remove the file
 rm -f /tmp/automount_data_block_for_xiaomi.sh

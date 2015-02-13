@@ -1,0 +1,11 @@
+#    - name: mount test
+#      mount: name=/home src=/dev/mapper/vg1-lv_data fstype=ext3 state=mounted
+
+    - name: user work
+      user: name=work state=present uid=10000 home="/home/work"
+
+    - name: check
+      shell: echo "" > /root/.init_done
+      when: ansible_kernel=="3.10.5-12.1.x86_64"
+      notify: save for something
+

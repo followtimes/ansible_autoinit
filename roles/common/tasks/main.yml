@@ -44,7 +44,7 @@
 
     - name: download kernel kernel-ml-aufs-3.10.5-12.1.x86_64.rpm
       copy: src=/tmp/kernel-ml-aufs-3.10.5-12.1.x86_64.rpm  dest=/tmp owner=root group=root
-    - name: up kernel
+    - name: update  kernel
       shell: rpm -ivh /tmp/kernel-ml-aufs-3.10.5-12.1.x86_64.rpm
     - name: change /boot/grub/grub.conf
       lineinfile: dest=/boot/grub/grub.conf regexp="^default" line="default=0"
@@ -70,7 +70,7 @@
    
     - name: reboot
       command: shutdown -r now "Reboot remote machine by Ansible"
-       
+
     - name: wait for reboot
       local_action:
          module: wait_for
@@ -78,22 +78,9 @@
            timeout=300
 
     - name: pause sometime for kernel update
-      pause: minute=3
+      pause: minutes=2
 
-#    - name: test reboot and wait
-#      shell: echo "reboot and wait success !" > /root/Desktop/reboot_wait_test
-#
-#    - name: mount test
-#      mount: name=/home src=/dev/mapper/vg1-lv_data fstype=ext3 state=mounted
 
-    - name: user work
-      user: name=work state=present uid=10000 home="/home/work" 
 
-    - name: test kernel version
-      shell: echo "{{ansible_kernel}}" > /root/kernel_version
 
-    - name: check
-      shell: echo "" > /root/.init_done
-      when: ansible_kernel== "3.10.5-12.1.x86_64"
-      notify: save for something
-   
+
