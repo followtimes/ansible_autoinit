@@ -54,19 +54,19 @@ auto_init_git_xiaomi
                |-expect_ssh.exp
        |-roles 
             |-common
-                |-files
-                |-handlers
-                   |-main.yml
-                |-tasks
-                   |-main.yml
-                |-templates
+               |-files
+               |-handlers
+                  |-main.yml
+               |-tasks
+                  |-main.yml
+               |-templates
             |-check
-                |-files
-                |-handlers
-                   |-main.yml
-                |-tasks
-                   |-main.yml
-                |-templates
+               |-files
+               |-handlers
+                  |-main.yml
+               |-tasks
+                  |-main.yml
+               |-templates
                 
 ----------------------------------------------------------------------
 
