@@ -1,4 +1,8 @@
 - hosts: jinshan_all
        
+  pre_tasks:
+    - stat: path=/root/.init_done
+      register: st
+
   roles:
-    - { role: common, with_first_found: /root/.init_done , when: ansible_distribution=="CentOS" and ansible_distribution_version|int>=6 }
+    - { role: common, when: ansible_distribution=="CentOS" and ansible_distribution_version|int>=6 and not st.stat.exists}
